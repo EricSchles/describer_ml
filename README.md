@@ -16,3 +16,13 @@ This is data with a geospatial component, therefore this data is collected with 
 
 This is data without time or geospatial structure.  For now it is the blanket for all other data.  If a better name is decided upon, it will be used in this names place.
 
+## Known Installation Issues
+
+If you get `ModuleNotFoundError: No module named 'tkinter'`:
+
+Since this library relies on pysal, it relies on tkinter.  Tkinter is a weird library in that it isn't pip installable.  On some systems it comes pre-installed, on others it does not.  For ubuntu the fix is:
+
+`sudo apt-get install idle3`
+
+This is the only way I've found to install tkinter for python 3.  This library does not offer python 2 support so I won't discuss installation for that version.
+

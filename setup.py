@@ -24,7 +24,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=["describer_ml", ],
+    packages=["describer_ml", "describer_ml.timeseries"],
     include_package_data=True,
     install_requires=["sklearn", "scipy", "numpy", "statsmodels", "pytest", "mlxtend"],
 )

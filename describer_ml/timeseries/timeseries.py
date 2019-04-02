@@ -139,32 +139,35 @@ class ForecastMetrics:
 
 class TimeSeriesHypothesisTests:
     def __init__(self, timeseries):
-        self.timeseries = timeseries
-        self.model = None
-        self.model_result = None
-        
-    def ad_fuller_test(self):
-        result = stattools.adfuller(self.timeseries)
+        pass
+
+    @staticmethod
+    def ad_fuller_test(self, timeseries):
+        result = stattools.adfuller(timeseries)
         AdFullerResult = namedtuple('AdFullerResult', 'statistic pvalue')
         return AdFullerResult(result[0], result[1])
-    
-    def kpss(self):
-        result = stattools.kpss(self.timeseries)
+
+    @staticmethod
+    def kpss(self, timeseries):
+        result = stattools.kpss(timeseries)
         KPSSResult = namedtuple('KPSSResult', 'statistic pvalue')
         return KPSSResult(result[0], result[1])
 
-    def cointegration(self, alt_timeseries):
-        result = stattools.coint(self.timeseries, alt_timeseries)
+    @staticmethod
+    def cointegration(self, timeseries, alt_timeseries):
+        result = stattools.coint(timeseries, alt_timeseries)
         CointegrationResult = namedtuple('CointegrationResult', 'statistic pvalue')
         return CointegrationResult(result[0], result[1])
 
+    @staticmethod
     def bds(self):
         result = stattools.bds(self.timeseries)
         BdsResult = namedtuple('BdsResult', 'statistic pvalue')
         return BdsResult(result[0], result[1])
-        
-    def q_stat(self):
-        autocorrelation_coefs = stattools.acf(self.timeseries)
+
+    @staticmethod
+    def q_stat(self, timeseries):
+        autocorrelation_coefs = stattools.acf(timeseries)
         result = stattools.q_stat(autocorrelation_coefs)
         QstatResult = namedtuple('QstatResult', 'statistic pvalue')
         return QstatResult(result[0], result[1])
@@ -186,7 +189,8 @@ class TimeSeriesHypothesisTests:
         return error
 
     # evaluate combinations of p, d and q values for an ARIMA model
-    def generate_model(self):
+    @staticmethod
+    def generate_model(self, timeseries):
         best_score, best_cfg = float("inf"), None
         p_values = [0, 1, 2, 4, 6, 8, 10]
         d_values = range(0, 3)
@@ -196,41 +200,41 @@ class TimeSeriesHypothesisTests:
                 for q in q_values:
                     order = (p,d,q)
                     try:
-                        mse = self._evaluate_arima_model(self.timeseries, order)
+                        mse = self._evaluate_arima_model(timeseries, order)
                         if mse < best_score:
                             best_score = mse
                             best_order = order
                     except:
                         continue
-        model = ARIMA(self.timeseries, order=best_order)
+        model = ARIMA(timeseries, order=best_order)
         model_result = model.fit(disp=0)
         return model, model_result
-    
-    def acorr_ljungbox(self):
-        if self.model is None:
-            model, model_result = self.generate_model()
-        result = diagnostic.acorr_ljungbox(self.model_result)
+
+    @staticmethod
+    def acorr_ljungbox(self, timeseries):
+        model, model_result = self.generate_model(timeseries)
+        result = diagnostic.acorr_ljungbox(model_result)
         AcorrLjungBoxResult = namedtuple('AcorrLjungBoxResult', 'statistic pvalue')
         return AcorrLjungBoxResult(result[0], result[1])
-    
-    def acorr_breusch_godfrey(self):
-        if self.model is None:
-            model, model_result = self.generate_model()
-        result = diagnostic.acorr_breusch_godfrey(self.model_result)
+
+    @staticmethod
+    def acorr_breusch_godfrey(self, timeseries):
+        model, model_result = self.generate_model(timeseries)
+        result = diagnostic.acorr_breusch_godfrey(model_result)
         AcorrBreuschGodfreyResult = namedtuple('BreuschGodfreyResult', 'statistic pvalue')
         return AcorrBreuschGodfreyResult(result[0], result[1])
 
-    def het_arch(self):
-        if self.model is None:
-            model, model_result = self.generate_model()
-        result = diagnostic.het_arch(self.model_result)
+    @staticmethod
+    def het_arch(self, timeseries):
+        model, model_result = self.generate_model(timeseries)
+        result = diagnostic.het_arch(model_result)
         HetArchResult = namedtuple('HetArchResult', 'statistic pvalue')
         return HetArchResult(result[0], result[1])
 
-    def breaks_cumsumolsresid(self):
-        if self.model is None:
-            model, model_result = self.generate_model()
-        result = diagnostic.breaks_cusumolsresid(self.model_result)
+    @staticmethod
+    def breaks_cumsumolsresid(self, timeseries):
+        model, model_result = self.generate_model(timeseries)
+        result = diagnostic.breaks_cusumolsresid(model_result)
         BreaksCumSumResult = namedtuple('BreaksCumSumResult', 'statistic pvalue')
         return BreaksCumSumResult(result[0], result[1])
 

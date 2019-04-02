@@ -1,4 +1,5 @@
 pytest
+statsmodels
 scikit-learn
 scipy
 numpy

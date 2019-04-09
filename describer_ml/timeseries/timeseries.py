@@ -11,7 +11,7 @@ from sklearn import metrics
 from scipy.stats import mstats
 warnings.filterwarnings("ignore")
 
-class ForecastMetrics:
+class TimeSeriesMetrics:
     def __init__(self):
         pass
     

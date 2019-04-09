@@ -12,9 +12,18 @@ This is data with a timeseries component, therefore this data is collected over 
 
 This is data with a geospatial component, therefore this data is collected with coordinates of some kind.  It is likely latitude and longitude or some variant there of will be present in data sets of this kind.
 
-* Typical Data 
+* Numeric Data 
 
 This is data without time or geospatial structure.  For now it is the blanket for all other data.  If a better name is decided upon, it will be used in this names place.
+
+* Image Data
+
+This is data from images that has been transformed via some feature engineering to numbers or possibly the raw pixels in some scale, likely RGB or Grey scale.
+
+* Text Data
+
+This is textual data that has been transformed via some feature engineering to numbers.
+
 
 ## Known Installation Issues
 

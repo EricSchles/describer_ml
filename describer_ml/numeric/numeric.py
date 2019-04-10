@@ -105,7 +105,32 @@ class NumericStatistics:
     def entropy(self, probabilities, alternative_probabilities=None):
         return stats.entropy(probabilities, alternative_probabilities)
 
-    # trimean
+    @staticmethod
+    def trimean(self, data):
+        q1 = np.quantile(data, 0.25)
+        q3 = np.quantile(data, 0.75)
+        median = np.median(data)
+        return (q1 + 2*median + q3)/4
+
+    @staticmethod
+    def interquartile_mean(self, data):
+        q1 = np.quantile(data, 0.25)
+        q3 = np.quantile(data, 0.75)
+        sorted_data = np.sort(data)
+        trimmed_data = sorted_data[(sorted_data >= q1) & (sorted_data <= q3)]
+        return np.mean(trimmed_data)
+    
+    @staticmethod
+    def midhinge(self, data):
+        q1 = np.quantile(data, 0.25)
+        q3 = np.quantile(data, 0.75)
+        return np.mean([q1, q3])
+
+    @staticmethod
+    def value_range(self, data):
+        max_val = np.max(data)
+        min_val = np.min(data)
+        return abs(max_val - min_val)
     # things like this
     # trimmed statistics
     # investigate here: https://en.wikipedia.org/wiki/Descriptive_statistics

@@ -1,0 +1,13 @@
+MANIFEST.in
+README.md
+setup.py
+describer_ml/__init__.py
+describer_ml.egg-info/PKG-INFO
+describer_ml.egg-info/SOURCES.txt
+describer_ml.egg-info/dependency_links.txt
+describer_ml.egg-info/requires.txt
+describer_ml.egg-info/top_level.txt
+describer_ml/numeric/__init__.py
+describer_ml/numeric/numeric.py
+describer_ml/timeseries/__init__.py
+describer_ml/timeseries/timeseries.py

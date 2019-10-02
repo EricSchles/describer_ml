@@ -163,6 +163,8 @@ def isclose(value_one, value_two,
     Some sense of stability in the scale of your data is expected,
     to make use of this function.
     """
+    if not distance_function:
+        distance_function = distance.euclidean
     if distance_function(value_one, value_two) < max_deviance:
         return True
     else:

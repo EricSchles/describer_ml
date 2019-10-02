@@ -131,6 +131,13 @@ class NumericStatistics:
         max_val = np.max(data)
         min_val = np.min(data)
         return abs(max_val - min_val)
+
+    @staticmethod
+    def trimean_absolute_deviation(self, data):
+        trimean = self.trimean(data)
+        numerator = [abs(elem - trimean) for elem in data]
+        return sum(numerator)/len(data)
+    
     # things like this
     # trimmed statistics
     # investigate here: https://en.wikipedia.org/wiki/Descriptive_statistics

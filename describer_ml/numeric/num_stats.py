@@ -1,3 +1,4 @@
+import pandas as pd
 import numpy as np
 from thinkbayes2 import Cdf as CDF
 from scipy import stats

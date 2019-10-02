@@ -142,7 +142,26 @@ def get_inliers_outliers_if(dist):
     
 def isclose(value_one, value_two,
             max_deviance,
-            distance_function=None):    
+            distance_function=None):
+    """
+    Here we define the max_deviance parameter.
+    This parameter assumes you have a sense of
+    the appropriate deviance.
+    I suggest looking at some plots of your data,
+    when doing exploratory data analysis to figure this out.
+    The appropriate deviance is a maximum threshold for what
+    should be considered close in your dataset.
+    Eventually, the goal is to figure out an automated method
+    to figure this out.  However, for now, no such metric
+    appears obvious, therefore I leave it to the user to figure out
+    what 'closeness' means for your data.
+    
+    If this measure is hard to come by, or changes often, then this
+    is probably not the right metric for you.
+    
+    Some sense of stability in the scale of your data is expected,
+    to make use of this function.
+    """
     if distance_function(value_one, value_two) < max_deviance:
         return True
     else:
@@ -151,6 +170,9 @@ def isclose(value_one, value_two,
 def get_compare_value(value, cdf,
                       max_deviance,
                       distance_function=None):
+    """
+    Please see doc string in isclose.
+    """
     if value in cdf:
         return value
     for value_two in cdf:
@@ -167,6 +189,9 @@ def get_compare_value(value, cdf,
 def get_within_boundary(cdf_one, cdf_two, spread,
                         max_deviance,
                         distance_function=None):
+    """
+    Please see doc string in isclose. 
+    """
     within_upper_bound = []
     within_lower_bound = []
     for value in cdf_one:
@@ -200,6 +225,8 @@ def compare_cdf_mean_absolute_deviation(dist_one, dist_two,
     """
     We assume dist_one and dist_two are of the same size.
     I.E. len(dist_one) == len(dist_two)
+    
+    Please see doc string for isclose.
     """
     if remove_outliers:
         dist_one = remove_outliers(dist_one)
@@ -221,6 +248,8 @@ def compare_cdf_median_absolute_deviation(dist_one, dist_two,
     """
     We assume dist_one and dist_two are of the same size.
     I.E. len(dist_one) == len(dist_two)
+
+    Please see doc string for isclose
     """
     if remove_outliers:
         dist_one = remove_outliers(dist_one)
@@ -242,6 +271,8 @@ def compare_cdf_trimean_absolute_deviation(dist_one, dist_two,
     """
     We assume dist_one and dist_two are of the same size.
     I.E. len(dist_one) == len(dist_two)
+
+    Please see doc string for isclose
     """
     if remove_outliers:
         dist_one = remove_outliers(dist_one)
@@ -264,6 +295,8 @@ def compare_cdf_hard_coded_boundary(dist_one, dist_two,
     """
     We assume dist_one and dist_two are of the same size.
     I.E. len(dist_one) == len(dist_two)
+
+    Please see doc string for isclose
     """
     if remove_outliers:
         dist_one = remove_outliers(dist_one)

@@ -1,4 +1,4 @@
-__version__ = '0.9'
+__version__ = '0.12'
 
 from .timeseries import timeseries
 from .numeric import num_stats

@@ -1,6 +1,9 @@
 import numpy as np
 from thinkbayes2 import Cdf as CDF
 from scipy import stats
+from scipy.spatial import distance
+from sklearn.ensemble import IsolationForest
+from sklearn import preprocessing 
 
 def minimum(array):
     return np.amin(array)
@@ -127,19 +130,50 @@ def _get_cdf(dist):
 def _get_prob_values(cdf):
     return list(cdf.values())
 
-def get_compare_value(value, cdf):
+def get_inliers_outliers_if(dist):
+    clf = IsolationForst(
+        behaviour='new', contamination='auto'
+    )
+    result = clf.fit_predict(dist.reshape(-1, 1))
+    result = pd.Series(result)
+    outliers = dist[result[result == -1].index]
+    inliers = dist[result[result != -1].index]
+    return inliers, outliers
+    
+def isclose(value_one, value_two,
+            max_deviance,
+            distance_function=None):    
+    if distance_function(value_one, value_two) < max_deviance:
+        return True
+    else:
+        return False
+
+def get_compare_value(value, cdf,
+                      max_deviance,
+                      distance_function=None):
     if value in cdf:
         return value
     for value_two in cdf:
         if np.isclose(value, value_two):
             return value_two
+        close_enough = isclose(
+            value, value_two, max_deviance,
+            distance_function=distance_function
+        )
+        if close_enough:
+            return value_two
     return None
 
-def get_within_boundary(cdf_one, cdf_two, spread):
+def get_within_boundary(cdf_one, cdf_two, spread,
+                        max_deviance,
+                        distance_function=None):
     within_upper_bound = []
     within_lower_bound = []
     for value in cdf_one:
-        other_value = get_compare_value(value, cdf_two)
+        other_value = get_compare_value(
+            value, cdf_two, max_deviance,
+            distance_function=distance_function
+        )
         if not other_value:
             within_upper_bound.append(False)
             within_lower_bound.append(False)
@@ -153,53 +187,96 @@ def get_within_boundary(cdf_one, cdf_two, spread):
     within_upper_bound = np.array(within_upper_bound)
     within_lower_bound = np.array(within_lower_bound)
     return within_upper_bound & within_lower_bound
-            
-def compare_cdf_mean_absolute_deviation(dist_one, dist_two):
+
+def remove_outliers(dist):
+    dist = np.array(dist)
+    inliers, outliers = get_inliers_outliers_if(dist)
+    return inliers
+
+def compare_cdf_mean_absolute_deviation(dist_one, dist_two,
+                                        max_deviance,
+                                        distance_function=None,
+                                        remove_outliers=True):
     """
     We assume dist_one and dist_two are of the same size.
     I.E. len(dist_one) == len(dist_two)
     """
+    if remove_outliers:
+        dist_one = remove_outliers(dist_one)
+        dist_two = remove_outliers(dist_two)
     cdf_one = _get_cdf(dist_one)
     cdf_two = _get_cdf(dist_two)
     mad = mean_absolute_deviation(_get_prob_values(cdf_one))
-    within_boundary = get_within_boundary(cdf_one, cdf_two, mad)
+    within_boundary = get_within_boundary(
+        cdf_one, cdf_two, mad,
+        max_deviance,
+        distance_function=distance_function
+    )
     return (within_boundary).sum()/len(dist_one)
 
-def compare_cdf_median_absolute_deviation(dist_one, dist_two):
+def compare_cdf_median_absolute_deviation(dist_one, dist_two,
+                                          max_deviance,
+                                          distance_function=None,
+                                          remove_outliers=True):
     """
     We assume dist_one and dist_two are of the same size.
     I.E. len(dist_one) == len(dist_two)
     """
+    if remove_outliers:
+        dist_one = remove_outliers(dist_one)
+        dist_two = remove_outliers(dist_two)
     cdf_one = _get_cdf(dist_one)
     cdf_two = _get_cdf(dist_two)
     mad = median_absolute_deviation(_get_prob_values(cdf_one))
-    within_boundary = get_within_boundary(cdf_one, cdf_two, mad)
+    within_boundary = get_within_boundary(
+        cdf_one, cdf_two, mad,
+        max_deviance,
+        distance_function=distance_function
+    )
     return (within_boundary).sum()/len(dist_one)
 
-def compare_cdf_trimean_absolute_deviation(dist_one, dist_two):
+def compare_cdf_trimean_absolute_deviation(dist_one, dist_two,
+                                           max_deviance,
+                                           distance_function=None,
+                                           remove_outliers=True):
     """
     We assume dist_one and dist_two are of the same size.
     I.E. len(dist_one) == len(dist_two)
     """
+    if remove_outliers:
+        dist_one = remove_outliers(dist_one)
+        dist_two = remove_outliers(dist_two)
     cdf_one = _get_cdf(dist_one)
     cdf_two = _get_cdf(dist_two)
     tad = trimean_absolute_deviation(_get_prob_values(cdf_one))
-    within_boundary = get_within_boundary(cdf_one, cdf_two, tad)
+    within_boundary = get_within_boundary(
+        cdf_one, cdf_two, tad,
+        max_deviance,
+        distance_function=distance_function
+    )
     return (within_boundary).sum()/len(dist_one)
 
-def compare_cdf_hard_coded_boundary(dist_one, dist_two, boundary=0.01):
+def compare_cdf_hard_coded_boundary(dist_one, dist_two,
+                                    max_deviance,
+                                    distance_function=None,
+                                    boundary=0.01,
+                                    remove_outliers=True):
     """
     We assume dist_one and dist_two are of the same size.
     I.E. len(dist_one) == len(dist_two)
     """
+    if remove_outliers:
+        dist_one = remove_outliers(dist_one)
+        dist_two = remove_outliers(dist_two)
     cdf_one = _get_cdf(dist_one)
     cdf_two = _get_cdf(dist_two)
-    within_boundary = get_within_boundary(cdf_one, cdf_two, boundary)
+    within_boundary = get_within_boundary(
+        cdf_one, cdf_two, boundary,
+        max_deviance,
+        distance_function=distance_function
+    )
     return (within_boundary).sum()/len(dist_one)
 
 # things like this
 # trimmed statistics
 # investigate here: https://en.wikipedia.org/wiki/Descriptive_statistics
-
-    
-    

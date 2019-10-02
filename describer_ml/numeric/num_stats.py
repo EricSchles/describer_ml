@@ -131,6 +131,8 @@ def get_compare_value(value, cdf):
     return None
 
 def get_within_boundary(cdf_one, cdf_two, spread):
+    within_upper_bound = []
+    within_lower_bound = []
     for value in cdf_one:
         other_value = get_compare_value(value, cdf_two)
         if not other_value:

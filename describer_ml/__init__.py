@@ -1,6 +1,6 @@
-__version__ = '0.5'
+__version__ = '0.6'
 
 from .timeseries import timeseries
-from .numeric import numeric
+from .numeric import num_stats
 
-__all__ = ["timeseries", "numeric"]
+__all__ = ["timeseries", "num_stats"]

@@ -213,7 +213,7 @@ def get_within_boundary(cdf_one, cdf_two, spread,
     within_lower_bound = np.array(within_lower_bound)
     return within_upper_bound & within_lower_bound
 
-def remove_outliers(dist):
+def get_inliers(dist):
     dist = np.array(dist)
     inliers, outliers = get_inliers_outliers_if(dist)
     return inliers
@@ -229,8 +229,8 @@ def compare_cdf_mean_absolute_deviation(dist_one, dist_two,
     Please see doc string for isclose.
     """
     if remove_outliers:
-        dist_one = remove_outliers(dist_one)
-        dist_two = remove_outliers(dist_two)
+        dist_one = get_inliers(dist_one)
+        dist_two = get_inliers(dist_two)
     cdf_one = _get_cdf(dist_one)
     cdf_two = _get_cdf(dist_two)
     mad = mean_absolute_deviation(_get_prob_values(cdf_one))
@@ -252,8 +252,8 @@ def compare_cdf_median_absolute_deviation(dist_one, dist_two,
     Please see doc string for isclose
     """
     if remove_outliers:
-        dist_one = remove_outliers(dist_one)
-        dist_two = remove_outliers(dist_two)
+        dist_one = get_inliers(dist_one)
+        dist_two = get_inliers(dist_two)
     cdf_one = _get_cdf(dist_one)
     cdf_two = _get_cdf(dist_two)
     mad = median_absolute_deviation(_get_prob_values(cdf_one))
@@ -275,8 +275,8 @@ def compare_cdf_trimean_absolute_deviation(dist_one, dist_two,
     Please see doc string for isclose
     """
     if remove_outliers:
-        dist_one = remove_outliers(dist_one)
-        dist_two = remove_outliers(dist_two)
+        dist_one = get_inliers(dist_one)
+        dist_two = get_inliers(dist_two)
     cdf_one = _get_cdf(dist_one)
     cdf_two = _get_cdf(dist_two)
     tad = trimean_absolute_deviation(_get_prob_values(cdf_one))
@@ -299,8 +299,8 @@ def compare_cdf_hard_coded_boundary(dist_one, dist_two,
     Please see doc string for isclose
     """
     if remove_outliers:
-        dist_one = remove_outliers(dist_one)
-        dist_two = remove_outliers(dist_two)
+        dist_one = get_inliers(dist_one)
+        dist_two = get_inliers(dist_two)
     cdf_one = _get_cdf(dist_one)
     cdf_two = _get_cdf(dist_two)
     within_boundary = get_within_boundary(

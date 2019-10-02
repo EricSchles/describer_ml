@@ -117,7 +117,12 @@ def median_absolute_deviation(data):
 
 def _get_cdf(dist):
     cdf = CDF(dist)
-    return dict(cdf.Items())
+    return dict(
+        zip(
+            list(cdf.xs),
+            list(cdf.ps)
+        )
+    )
 
 def _get_prob_values(cdf):
     return list(cdf.values())

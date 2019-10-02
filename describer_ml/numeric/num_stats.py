@@ -131,7 +131,7 @@ def _get_prob_values(cdf):
     return list(cdf.values())
 
 def get_inliers_outliers_if(dist):
-    clf = IsolationForst(
+    clf = IsolationForest(
         behaviour='new', contamination='auto'
     )
     result = clf.fit_predict(dist.reshape(-1, 1))

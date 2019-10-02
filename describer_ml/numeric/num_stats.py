@@ -138,12 +138,13 @@ def get_within_boundary(cdf_one, cdf_two, spread):
         if not other_value:
             within_upper_bound.append(False)
             within_lower_bound.append(False)
-        within_upper_bound.append(
-            cdf_two[other_value] < cdf_one[value] + spread
-        )
-        within_lower_bound.append(
-            cdf_two[other_value] > cdf_one[value] - spread
-        )
+        else:
+            within_upper_bound.append(
+                cdf_two[other_value] < cdf_one[value] + spread
+            )
+            within_lower_bound.append(
+                cdf_two[other_value] > cdf_one[value] - spread
+            )
     within_upper_bound = np.array(within_upper_bound)
     within_lower_bound = np.array(within_lower_bound)
     return within_upper_bound & within_lower_bound

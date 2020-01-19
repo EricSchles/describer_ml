@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="describer_ml",
-    version="0.12",
+    version="0.15",
     description="A set of descriptive statistics and hypothesis tests",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -24,7 +24,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=["describer_ml", "describer_ml.timeseries", "describer_ml.numeric"],
+    packages=["describer_ml", "describer_ml.timeseries", "describer_ml.numeric", "describer_ml.matching"],
     include_package_data=True,
     install_requires=["sklearn", "scipy", "numpy", "statsmodels", "pytest", "mlxtend"],
 )

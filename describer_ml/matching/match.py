@@ -3,7 +3,7 @@ from describer_ml.numeric.num_stats import (
     skew, kurtosis, variation, interquartile_range,
     midhinge, entropy, mean_absolute_deviation,
     median_absolute_deviation, trimean_absolute_deviation,
-    get_inliers_outliers
+    
 )
 
 def get_diffs(listing):
@@ -29,6 +29,40 @@ def get_matches(grouped_df, max_diff):
             matching_columns.append(column)
     return matching_columns
 
+def get_multi_matches(df, match_column, max_diffs):
+    match_map = {
+        "mean": mean_match,
+        "median": median_match,
+        "trimean": trimean_match,
+        "mode": mode_match,
+        "standard_deviation": standard_deviation_match,
+        "variance": variance_match,
+        "skew": skew_match,
+        "kurtosis": kurtosis_match,
+        "variation": variation_match,
+        "interquartile_range": interquartile_range_match,
+        "midhinge": midhinge_match,
+        "entropy": entropy_match,
+        "mean_absolute_deviation": mean_absolute_deviation_match,
+        "median_absolute_deviation": median_absolute_deviation_match,
+        "trimean_absolute_deviation": trimean_absolute_deviation_match
+    }
+    matches = {}
+    for match_algo in max_diffs:
+        condition = max_diffs[matcher]
+        matcher = match_map(match_algo)
+        matches[match_algo] = matcher(
+            df, match_column, condition
+        )
+    return matches
+
+def get_multi_matching_columns(df, match_column, max_diffs):
+    matches = get_multi_matches(df, match_column, max_diffs)
+    matches = list(matches.values())
+    first_match = set(matches[0])
+    matches = [set(elem) for elem in matches[1:]]
+    return list(first_match.intersection(*matches))
+        
 def mean_match(df, match_column, max_diff):
     average_per_class = df.groupby(match_column).mean()
     return get_matches(mean_per_class, max_diff)
@@ -88,3 +122,4 @@ def median_absolute_deviation_match(df, match_column, max_diff):
 def trimean_absolute_deviation_match(df, match_column, max_diff):
     trimean_absolute_deviation_per_class = df.groupby(match_column).agg(trimean_absolute_deviation)
     return get_matches(trimean_absolute_deviation_per_class, max_diff)
+

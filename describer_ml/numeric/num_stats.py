@@ -24,11 +24,11 @@ def percentile(array):
 def percentile_with_nan(array):
     return np.nanpercentile(array)
 
-def quantile(array):
-    return np.quantile(array)
+def quantile(array, q):
+    return np.quantile(array, q)
 
-def quantile_with_nan(array):
-    return np.nanquantile(array)
+def quantile_with_nan(array, q):
+    return np.nanquantile(array, q)
 
 def median(array):
     return np.median(array)
@@ -131,7 +131,7 @@ def _get_cdf(dist):
 def _get_prob_values(cdf):
     return list(cdf.values())
 
-def get_inliers_outliers_if(dist):
+def get_inliers_outliers(dist):
     clf = IsolationForest(
         behaviour='new', contamination='auto'
     )

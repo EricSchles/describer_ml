@@ -127,14 +127,6 @@ def trimean_absolute_deviation_match(df, match_column, max_diff):
     trimean_absolute_deviation_per_class = df.groupby(match_column).agg(trimean_absolute_deviation)
     return get_matches(trimean_absolute_deviation_per_class, max_diff)
 
-def get_matches(grouped_df, max_diff):
-    matching_columns = []
-    for column in grouped_df.columns:
-        diffs = get_diffs(grouped_df[column])
-        if within_tolerance(diffs, max_diff):
-            matching_columns.append(column)
-    return matching_columns
-
 def distribution_match_cdf_hard_coded(df, match_column, max_deviances,
                                       min_percent_match=0.9,
                                       distance_function=None,

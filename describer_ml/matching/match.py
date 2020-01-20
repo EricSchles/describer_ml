@@ -160,14 +160,14 @@ def distribution_match_cdf_hard_coded(df, match_column, max_deviances,
             max_deviance = max_deviances[column]
             percent_match = compare_cdf_hard_coded_boundary(
                 first[column],
-                second[column]
+                second[column],
                 max_deviance,
                 distance_function=distance_function,
                 boundary=boundary,
                 remove_outliers=remove_outliers
             )
             percent_matches_per_class_per_column.append(
-                percent_match
+                percent_match,
                 class_combinations[index],
                 column
             )    
@@ -194,13 +194,13 @@ def distribution_match_cdf_mean_absolute_deviation(df,
             max_deviance = max_deviances[column]
             percent_match = compare_cdf_mean_absolute_deviation(
                 first[column],
-                second[column]
+                second[column],
                 max_deviance,
                 distance_function=distance_function,
                 remove_outliers=remove_outliers
             )
             percent_matches_per_class_per_column.append(
-                percent_match
+                percent_match,
                 class_combinations[index],
                 column
             )
@@ -227,13 +227,13 @@ def distribution_match_cdf_median_absolute_deviation(df,
             max_deviance = max_deviances[column]
             percent_match = compare_cdf_median_absolute_deviation(
                 first[column],
-                second[column]
+                second[column],
                 max_deviance,
                 distance_function=distance_function,
                 remove_outliers=remove_outliers
             )
             percent_matches_per_class_per_column.append(
-                percent_match
+                percent_match,
                 class_combinations[index],
                 column
             )
@@ -260,13 +260,13 @@ def distribution_match_cdf_trimean_absolute_deviation(df,
             max_deviance = max_deviances[column]
             percent_match = compare_cdf_trimean_absolute_deviation(
                 first[column],
-                second[column]
+                second[column],
                 max_deviance,
                 distance_function=distance_function,
                 remove_outliers=remove_outliers
             )
             percent_matches_per_class_per_column.append(
-                percent_match
+                percent_match,
                 class_combinations[index],
                 column
             )

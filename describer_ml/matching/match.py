@@ -127,14 +127,30 @@ def trimean_absolute_deviation_match(df, match_column, max_diff):
     trimean_absolute_deviation_per_class = df.groupby(match_column).agg(trimean_absolute_deviation)
     return get_matches(trimean_absolute_deviation_per_class, max_diff)
 
-def distribution_match_cdf_hard_coded(df, match_column, max_deviances,
-                                      min_percent_match=0.9,
-                                      distance_function=None,
-                                      boundary=0.01, remove_outliers=True):
+def get_groups_classes(df, match_column):
     columns = df.columns.tolist()
     columns.remove(match_column)
     groups = [tmp_df for _, tmp_df in df.groupby(match_column)]
     classes = list(df[match_column].unique())
+    return groups, classes
+
+def get_percent_matches(percent_matches, min_percent_match):
+    matches = []
+    for percent_match in percent_matches:
+        if percent_match[0] > min_percent_match:
+            matches.append((
+                percent_match[1],
+                percent_match[2]
+            ))
+    return matches
+
+def distribution_match_cdf_hard_coded(df, match_column, max_deviances,
+                                      min_percent_match=0.9,
+                                      distance_function=None,
+                                      boundary=0.01, remove_outliers=False):
+    groups, classes = get_groups_classes(
+        df, match_column
+    )
     class_combinations = list(combinations(classes, 2))
     percent_matches_per_class_per_column = []
     for index, combination in enumerate(combinations(groups, 2)):
@@ -154,12 +170,107 @@ def distribution_match_cdf_hard_coded(df, match_column, max_deviances,
                 percent_match
                 class_combinations[index],
                 column
+            )    
+    return get_percent_matches(
+        percent_matches_per_class_per_column,
+        min_percent_match
+    )
+
+def distribution_match_cdf_mean_absolute_deviation(df,
+                                                   match_column,
+                                                   max_deviances,
+                                                   min_percent_match=0.9,
+                                                   distance_function=None,
+                                                   remove_outliers=False):
+    groups, classes = get_groups_classes(
+        df, match_column
+    )
+    class_combinations = list(combinations(classes, 2))
+    percent_matches_per_class_per_column = []
+    for index, combination in enumerate(combinations(groups, 2)):
+        first = combination[0]
+        second = combination[1]
+        for column in columns:
+            max_deviance = max_deviances[column]
+            percent_match = compare_cdf_mean_absolute_deviation(
+                first[column],
+                second[column]
+                max_deviance,
+                distance_function=distance_function,
+                remove_outliers=remove_outliers
             )
-    matches = []
-    for percent_match in percent_matches_per_class_per_column:
-        if percent_match[0] > min_percent_match:
-            matches.append((
-                percent_match[1],
-                percent_match[2]
-            ))
-    return matches
+            percent_matches_per_class_per_column.append(
+                percent_match
+                class_combinations[index],
+                column
+            )
+    return get_percent_matches(
+        percent_matches_per_class_per_column,
+        min_percent_match
+    )
+
+def distribution_match_cdf_median_absolute_deviation(df,
+                                                     match_column,
+                                                     max_deviances,
+                                                     min_percent_match=0.9,
+                                                     distance_function=None,
+                                                     remove_outliers=False):
+    groups, classes = get_groups_classes(
+        df, match_column
+    )
+    class_combinations = list(combinations(classes, 2))
+    percent_matches_per_class_per_column = []
+    for index, combination in enumerate(combinations(groups, 2)):
+        first = combination[0]
+        second = combination[1]
+        for column in columns:
+            max_deviance = max_deviances[column]
+            percent_match = compare_cdf_median_absolute_deviation(
+                first[column],
+                second[column]
+                max_deviance,
+                distance_function=distance_function,
+                remove_outliers=remove_outliers
+            )
+            percent_matches_per_class_per_column.append(
+                percent_match
+                class_combinations[index],
+                column
+            )
+    return get_percent_matches(
+        percent_matches_per_class_per_column,
+        min_percent_match
+    )
+
+def distribution_match_cdf_trimean_absolute_deviation(df,
+                                                      match_column,
+                                                      max_deviances,
+                                                      min_percent_match=0.9,
+                                                      distance_function=None,
+                                                      remove_outliers=False):
+    groups, classes = get_groups_classes(
+        df, match_column
+    )
+    class_combinations = list(combinations(classes, 2))
+    percent_matches_per_class_per_column = []
+    for index, combination in enumerate(combinations(groups, 2)):
+        first = combination[0]
+        second = combination[1]
+        for column in columns:
+            max_deviance = max_deviances[column]
+            percent_match = compare_cdf_trimean_absolute_deviation(
+                first[column],
+                second[column]
+                max_deviance,
+                distance_function=distance_function,
+                remove_outliers=remove_outliers
+            )
+            percent_matches_per_class_per_column.append(
+                percent_match
+                class_combinations[index],
+                column
+            )
+    return get_percent_matches(
+        percent_matches_per_class_per_column,
+        min_percent_match
+    )

@@ -1,9 +1,13 @@
+from itertools import combinations
 from describer_ml.numeric.num_stats import (
     trimean, mode, variance, standard_deviation,
     skew, kurtosis, variation, interquartile_range,
     midhinge, entropy, mean_absolute_deviation,
     median_absolute_deviation, trimean_absolute_deviation,
-    
+    compare_cdf_hard_coded_boundary,
+    compare_cdf_trimean_absolute_deviation,
+    compare_cdf_median_absolute_deviation,
+    compare_cdf_mean_absolute_deviation
 )
 
 def get_diffs(listing):
@@ -123,3 +127,47 @@ def trimean_absolute_deviation_match(df, match_column, max_diff):
     trimean_absolute_deviation_per_class = df.groupby(match_column).agg(trimean_absolute_deviation)
     return get_matches(trimean_absolute_deviation_per_class, max_diff)
 
+def get_matches(grouped_df, max_diff):
+    matching_columns = []
+    for column in grouped_df.columns:
+        diffs = get_diffs(grouped_df[column])
+        if within_tolerance(diffs, max_diff):
+            matching_columns.append(column)
+    return matching_columns
+
+def distribution_match_cdf_hard_coded(df, match_column, max_deviances,
+                                      min_percent_match=0.9,
+                                      distance_function=None,
+                                      boundary=0.01, remove_outliers=True):
+    columns = df.columns.tolist()
+    columns.remove(match_column)
+    groups = [tmp_df for _, tmp_df in df.groupby(match_column)]
+    classes = list(df[match_column].unique())
+    class_combinations = list(combinations(classes, 2))
+    percent_matches_per_class_per_column = []
+    for index, combination in enumerate(combinations(groups, 2)):
+        first = combination[0]
+        second = combination[1]
+        for column in columns:
+            max_deviance = max_deviances[column]
+            percent_match = compare_cdf_hard_coded_boundary(
+                first[column],
+                second[column]
+                max_deviance,
+                distance_function=distance_function,
+                boundary=boundary,
+                remove_outliers=remove_outliers
+            )
+            percent_matches_per_class_per_column.append(
+                percent_match
+                class_combinations[index],
+                column
+            )
+    matches = []
+    for percent_match in percent_matches_per_class_per_column:
+        if percent_match[0] > min_percent_match:
+            matches.append((
+                percent_match[1],
+                percent_match[2]
+            ))
+    return matches

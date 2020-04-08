@@ -211,13 +211,6 @@ class TimeSeriesHypothesisTests:
         return model, model_result
 
     @staticmethod
-    def acorr_ljungbox(self, timeseries):
-        model, model_result = self.generate_model(timeseries)
-        result = diagnostic.acorr_ljungbox(model_result)
-        AcorrLjungBoxResult = namedtuple('AcorrLjungBoxResult', 'statistic pvalue')
-        return AcorrLjungBoxResult(result[0], result[1])
-
-    @staticmethod
     def acorr_breusch_godfrey(self, timeseries):
         model, model_result = self.generate_model(timeseries)
         result = diagnostic.acorr_breusch_godfrey(model_result)

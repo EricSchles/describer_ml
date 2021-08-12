@@ -1,3 +1,4 @@
+ThinkBayes2
 pytest
 statsmodels
 scikit-learn

@@ -214,22 +214,19 @@ class TimeSeriesHypothesisTests:
 
     @staticmethod
     def acorr_breusch_godfrey(timeseries):
-        model, model_result = TimeSeriesHypothesisTests.generate_model(timeseries)
-        result = diagnostic.acorr_breusch_godfrey(model_result.resid)
+        result = diagnostic.acorr_breusch_godfrey(timeseries)
         AcorrBreuschGodfreyResult = namedtuple('BreuschGodfreyResult', 'statistic pvalue')
         return AcorrBreuschGodfreyResult(result[0], result[1])
 
     @staticmethod
     def het_arch(timeseries):
-        model, model_result = TimeSeriesHypothesisTests.generate_model(timeseries)
-        result = diagnostic.het_arch(model_result.resid)
+        result = diagnostic.het_arch(timeseries)
         HetArchResult = namedtuple('HetArchResult', 'statistic pvalue')
         return HetArchResult(result[0], result[1])
 
     @staticmethod
     def breaks_cumsumolsresid(timeseries):
-        model, model_result = TimeSeriesHypothesisTests.generate_model(timeseries)
-        result = diagnostic.breaks_cusumolsresid(model_result.resid)
+        result = diagnostic.breaks_cusumolsresid(timeseries)
         BreaksCumSumResult = namedtuple('BreaksCumSumResult', 'statistic pvalue')
         return BreaksCumSumResult(result[0], result[1])
 

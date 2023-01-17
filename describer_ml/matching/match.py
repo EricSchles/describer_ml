@@ -53,8 +53,8 @@ def get_multi_matches(df, match_column, max_diffs):
     }
     matches = {}
     for match_algo in max_diffs:
-        matcher = match_map(match_algo)
-        condition = max_diffs[matcher]
+        condition = max_diffs[match_algo]
+        matcher = match_map[match_algo]
         matches[match_algo] = matcher(
             df, match_column, condition
         )

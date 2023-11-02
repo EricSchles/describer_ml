@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="describer_ml",
-    version="0.25",
+    version="0.28",
     description="A set of descriptive statistics and hypothesis tests",
     long_description=README,
     long_description_content_type="text/markdown",

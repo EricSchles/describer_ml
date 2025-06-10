@@ -26,5 +26,5 @@ setup(
     ],
     packages=["describer_ml", "describer_ml.timeseries", "describer_ml.numeric", "describer_ml.matching"],
     include_package_data=True,
-    install_requires=["sklearn", "scipy", "numpy", "statsmodels", "pytest", "mlxtend", "ThinkBayes2"],
+    install_requires=["scikit-learn", "scipy", "numpy", "statsmodels", "pytest", "mlxtend", "ThinkBayes2"],
 )

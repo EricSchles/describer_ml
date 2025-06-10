@@ -40,7 +40,7 @@ def standard_deviation(array):
     return np.std(array)
 
 def variance(array):
-    return np.variance(array)
+    return np.var(array)
 
 def median_with_nan(array):
     return np.nanmedian(array)
@@ -64,7 +64,7 @@ def kurtosis(array):
     return stats.kurtosis(array)
 
 def mode(array):
-    return stats.mode(array)
+    return stats.mode(array).mode[0]
 
 def skew(array):
     return stats.skew(array)
@@ -105,18 +105,18 @@ def value_range(data):
     return abs(max_val - min_val)
 
 def trimean_absolute_deviation(data):
-    trimean = trimean(data)
-    numerator = [abs(elem - trimean) for elem in data]
+    _trimean = trimean(data)
+    numerator = [abs(elem - _trimean) for elem in data]
     return sum(numerator)/len(data)
 
 def mean_absolute_deviation(data):
-    mean = mean(data)
-    numerator = [abs(elem - mean) for elem in data]
+    _mean = mean(data)
+    numerator = [abs(elem - _mean) for elem in data]
     return sum(numerator)/len(data)
 
 def median_absolute_deviation(data):
-    median = median(data)
-    numerator = [abs(elem - median) for elem in data]
+    _median = median(data)
+    numerator = [abs(elem - _median) for elem in data]
     return sum(numerator)/len(data)
 
 def _get_cdf(dist):

@@ -30,7 +30,7 @@ def get_matches(grouped_df, max_diff):
     for column in grouped_df.columns:
         diffs = get_diffs(grouped_df[column])
         if within_tolerance(diffs, max_diff):
-            matching_columns.append(column)
+            matching_columns.append(True)
     return matching_columns
 
 def get_multi_matches(df, match_column, max_diffs):
@@ -53,8 +53,8 @@ def get_multi_matches(df, match_column, max_diffs):
     }
     matches = {}
     for match_algo in max_diffs:
-        condition = max_diffs[matcher]
-        matcher = match_map(match_algo)
+        condition = max_diffs[match_algo]
+        matcher = match_map[match_algo]
         matches[match_algo] = matcher(
             df, match_column, condition
         )
@@ -68,7 +68,7 @@ def get_multi_matching_columns(df, match_column, max_diffs):
     return list(first_match.intersection(*matches))
         
 def mean_match(df, match_column, max_diff):
-    average_per_class = df.groupby(match_column).mean()
+    mean_per_class = df.groupby(match_column).mean()
     return get_matches(mean_per_class, max_diff)
 
 def median_match(df, match_column, max_diff):
